@@ -3,24 +3,30 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
+  max-width: 100%; /* !!!!!!!!!!!!!!!! */
 }
 
 html, body, #__next  {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container {
   background-color: #bdc3c7; /* gray for light mode */
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: row;
   transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .dark.container {
-  background-color: #1e1e1e; /* black for dark mode */
+  background-color: #22303e; /* dark grey for dark mode */
 }
 
 .light {
@@ -29,7 +35,7 @@ html, body, #__next  {
 }
 
 .dark {
-  background: #1e1e1e;
+  background: #22303e;
   color: #fff;
 }
 
@@ -42,7 +48,7 @@ html, body, #__next  {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2% 1%;
+  padding: 16px 12px;
   gap: 1%;
   position: relative;
 }
@@ -89,9 +95,9 @@ html, body, #__next  {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 2%;
-  gap: 2%;
-  min-width: 0; /* allows flex children to shrink properly */
+  padding: 20px;
+  gap: 20px;
+  min-width: 0;
 }
 
 .navbar {
@@ -101,11 +107,19 @@ html, body, #__next  {
   padding: 1%;
   background: #bdc3c7;
   border-radius: 10px;
-  width: 85vw;
+  width: 100%;
 }
 
 .dark .navbar {
-  background: #2c3e50;
+  background: #34495e;
+}
+
+.dark .box {
+  background: #34495e;
+}
+
+.dark .bottom {
+  background: #34495e;
 }
 
 .dark-mode-toggle {
@@ -113,16 +127,16 @@ html, body, #__next  {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background: #34495e;
+  background: #22303e;
   color: white;
 }
 
 .top {
   display: flex;
-  gap: 2%;
+  gap: 20px;
   height: 45%;
   min-height: 100px;
-  width: 85vw;
+  width: 100%;
 }
 
 .box {
@@ -147,7 +161,7 @@ html, body, #__next  {
   justify-content: center;
   font-size: 2vw;
   min-height: 150px;
-  width: 85vw;
+  width: 100%;
 }
 
 /* Responsive */
@@ -167,7 +181,7 @@ html, body, #__next  {
   .menu-items {
     display: none;
     flex-direction: column;
-    width: 100%;
+    width: 100vw;
     background: #2c3e50;
     position: absolute;
     top: 60px;
@@ -176,6 +190,7 @@ html, body, #__next  {
   }
   .menu-items.open {
     display: flex;
+    width: 100%;
   }
   .top {
     flex-direction: column;

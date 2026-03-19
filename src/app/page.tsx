@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import './page.css';
-import logo from './logo.png'; // Place your logo in the same folder
+import Image from 'next/image';
+import logo from './logo.png';
 
 const Page: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ const Page: React.FC = () => {
   return (
     <div className={`container ${darkMode ? 'dark' : 'light'}`}>
       <div className="sidebar">
-        <img src="./Logo monochrome RGB white PNG.png" alt="Company Logo" className="logo" />
+        <Image src={logo} alt="Company Logo" className="logo" />
         <button className="menu-toggle" onClick={toggleMenu}>&#9776;</button>
         <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
           <button>Item 1</button>
@@ -31,10 +32,10 @@ const Page: React.FC = () => {
           </button>
         </div>
         <div className="top">
-          <div className="box">Top Left</div>
-          <div className="box">Top Right</div>
+          <div className="box">Last shift pie chart</div>
+          <div className="box">Last hour pie chart</div>
         </div>
-        <div className="bottom">Bottom (Large)</div>
+        <div className="bottom">Last shift line graph</div>
       </div>
     </div>
   );
