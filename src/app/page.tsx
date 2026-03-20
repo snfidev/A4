@@ -1,17 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import './page.css';
-import Image from 'next/image';
-import logo from './logo.png';
-import BallBox from './BallBox'; // <-- import the component
+import BallBox from './mainPageComponents/BallBox';
+import LineGraph from './mainPageComponents/LineGraph';
 
 export default function Page() {
-  // Dashboard state
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Ball counters
+  // Only keep page-specific state
   const [goodCount, setGoodCount] = useState(0);
   const [badCount, setBadCount] = useState(0);
 
@@ -36,46 +30,30 @@ export default function Page() {
     setBadCount(prev => prev + 1);
   };
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const toggleDarkMode = () => setDarkMode(!darkMode);
-
   return (
-    <div className={`container ${darkMode ? 'dark' : 'light'}`}>
-      <div className="sidebar">
-        <Image src={logo} alt="Company Logo" className="logo" />
-        <button className="menu-toggle" onClick={toggleMenu}>
-          &#9776;
-        </button>
-        <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
-          <button>Item 1</button>
-          <button>Item 2</button>
-          <button>Item 3</button>
-          <button>Item 4</button>
+    <>
+      {/* TOP SECTION */}
+      <div className="top">
+        <div className="box">
+          <BallBox trigger={goodCount} color="green" />
         </div>
+        <div className="box">
+          <BallBox trigger={badCount} color="red" />
+        </div>
+      </div>
 
+      {/* ACTION BUTTONS (optional, since sidebar had them before) */}
+      <div style={{ display: 'flex', gap: '10px' }}>
         <button onClick={addGood}>+ Good</button>
         <button onClick={addBad}>+ Bad</button>
       </div>
 
-      <div className="main">
-        <div className="navbar">
-          <span className="navbar-title">Dashboard</span>
-          <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
+      {/* BOTTOM GRAPH */}
+      <div className="bottom">
+        <div className="linegraph-wrapper">
+          <LineGraph />
         </div>
-
-        <div className="top">
-          <div className="box">
-            <BallBox trigger={goodCount} color="green" />
-          </div>
-          <div className="box">
-            <BallBox trigger={badCount} color="red" />
-          </div>
-        </div>
-
-        <div className="bottom">Last shift line graph</div>
       </div>
-    </div>
+    </>
   );
 }

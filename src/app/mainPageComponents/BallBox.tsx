@@ -36,6 +36,7 @@ export default function BallBox({ trigger, color }: Props) {
   });
 
   function setupWorld() {
+    if (!box) return;
     const width = box.clientWidth;
     const height = box.clientHeight;
 
