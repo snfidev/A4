@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Matter from 'matter-js';
+import './page.css';
 
 type Props = {
   trigger: number;
@@ -14,60 +15,93 @@ export default function BallBox({ trigger, color }: Props) {
   const runnerRef = useRef(Matter.Runner.create());
 
   useEffect(() => {
-    const engine = engineRef.current;
-    const world = engine.world;
-    const runner = runnerRef.current;
+  const engine = engineRef.current;
+  const world = engine.world;
+  const runner = runnerRef.current;
 
-    // Set gravity
-    engine.gravity.y = 1; // 1 is normal, increase for faster fall
+  const box = sceneRef.current;
+  if (!box) return;
 
-    // Create renderer
-    const render = Matter.Render.create({
-      element: sceneRef.current!,
-      engine,
-      options: {
-        width: 300,
-        height: 200,
-        wireframes: false,
-        background: 'transparent',
-      },
-    });
+  engine.gravity.y = 1.5;
 
-    // Walls
-    const ground = Matter.Bodies.rectangle(150, 200, 300, 20, { isStatic: true });
-    const leftWall = Matter.Bodies.rectangle(0, 100, 20, 200, { isStatic: true });
-    const rightWall = Matter.Bodies.rectangle(300, 100, 20, 200, { isStatic: true });
+  const render = Matter.Render.create({
+    element: box,
+    engine: engine,
+    options: {
+      width: box.clientWidth,
+      height: box.clientHeight,
+      wireframes: false,
+      background: 'transparent'
+  },
+  });
+
+  function setupWorld() {
+    const width = box.clientWidth;
+    const height = box.clientHeight;
+
+    // clear only bodies (keep engine)
+    Matter.World.clear(world, false);
+
+    const ground = Matter.Bodies.rectangle(width / 2, height, width, 20, {
+  isStatic: true,
+  render: { visible: false }
+});
+
+const leftWall = Matter.Bodies.rectangle(0, height / 2, 20, height, {
+  isStatic: true,
+  render: { visible: false }
+});
+
+const rightWall = Matter.Bodies.rectangle(width, height / 2, 20, height, {
+  isStatic: true,
+  render: { visible: false }
+});
+
     Matter.World.add(world, [ground, leftWall, rightWall]);
 
-    // Run physics
-    Matter.Runner.run(runner, engine);
-    Matter.Render.run(render);
+    render.canvas.width = width;
+    render.canvas.height = height;
+  }
 
-    return () => {
-      Matter.Render.stop(render);
-      Matter.World.clear(world, false);
-      Matter.Engine.clear(engine);
-      Matter.Render.stop(render);
-    };
-  }, []);
+  setupWorld();
+
+  // watch actual element size
+  const observer = new ResizeObserver(setupWorld);
+  observer.observe(box);
+
+  Matter.Runner.run(runner, engine);
+  Matter.Render.run(render);
+
+  return () => {
+    observer.disconnect();
+    Matter.Render.stop(render);
+    Matter.World.clear(world, false);
+    Matter.Engine.clear(engine);
+  };
+}, []);
 
   // Drop ball when trigger changes
-  useEffect(() => {
-    const engine = engineRef.current;
+useEffect(() => {
+  const engine = engineRef.current;
 
-    const ball = Matter.Bodies.circle(
-      Math.random() * 200 + 50, // x position
-      10,                       // y position slightly below top
-      10,                       // radius
-      {
-        restitution: 0.9,       // bounce
-        friction: 0.05,         // how quickly it slows down on surfaces
-        render: { fillStyle: color },
-      }
-    );
+  const box = sceneRef.current;
+  if (!box) return; // fix
 
-    Matter.World.add(engine.world, ball);
-  }, [trigger, color]);
+  const width = box.clientWidth;
+
+  const ball = Matter.Bodies.circle(
+    Math.random() * width,
+    10,
+    10,
+    {
+      restitution: 0.9,
+      friction: 0.05,
+      render: { fillStyle: color },
+    }
+  );
+
+  Matter.World.add(engine.world, ball);
+}, [trigger, color]);
 
   return <div ref={sceneRef} />;
 }

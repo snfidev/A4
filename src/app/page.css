@@ -149,6 +149,7 @@ html, body, #__next  {
   align-items: center;
   justify-content: center;
   font-size: 2vw;
+  aspect-ratio: 1 / 1;
 }
 
 .bottom {
@@ -162,6 +163,11 @@ html, body, #__next  {
   font-size: 2vw;
   min-height: 150px;
   width: 100%;
+}
+
+.box > div {
+  width: 100%;
+  height: 100%;
 }
 
 /* Responsive */
