@@ -43,7 +43,6 @@ body,
 }
 
 .container {
-  background-color: #bdc3c7; /* gray for light mode */
   width: 100%;
   height: 100vh;
   display: flex;
@@ -55,20 +54,6 @@ body,
   flex: 1;
   min-width: 0;
   overflow: hidden;
-}
-
-.dark.container {
-  background-color: #22303e; /* dark grey for dark mode */
-}
-
-.light {
-  background: #ecf0f1;
-  color: #000;
-}
-
-.dark {
-  background: #22303e;
-  color: #fff;
 }
 
 .sidebar {
@@ -190,6 +175,45 @@ body,
   cursor: pointer;
   background: #22303e;
   color: white;
+}
+
+.app-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Background layer */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  background-repeat: repeat; /* repeat horizontally and vertically */
+  background-size: 250px 250px; /* tile size */
+  animation: flow 30s linear infinite; /* adjust duration to slow down */
+}
+
+/* Water / Lava variants */
+.background.water {
+  background-image: url("/Sea.png");
+}
+
+.background.lava {
+  background-image: url("/Lava.png");
+}
+
+/* Animation */
+@keyframes flow {
+  from {
+    background-position: 0 0;
+  } /* start at top */
+  to {
+    background-position: 0 200px;
+  } /* move downward by 200px */
 }
 
 /* Responsive */

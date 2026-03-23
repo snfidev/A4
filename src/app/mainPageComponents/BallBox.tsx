@@ -11,22 +11,24 @@ type Props = {
 
 export default function BallBox({ trigger, color }: Props) {
   const sceneRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef(Matter.Engine.create());
-  const runnerRef = useRef(Matter.Runner.create());
+  const engineRef = useRef<Matter.Engine | undefined>(undefined);
+  const runnerRef = useRef<Matter.Runner | undefined>(undefined);
 
   useEffect(() => {
-    const engine = engineRef.current;
-    const world = engine.world;
-    const runner = runnerRef.current;
-
     const box = sceneRef.current;
     if (!box) return;
+
+    // Create new engine and runner on mount
+    const engine = Matter.Engine.create();
+    const runner = Matter.Runner.create();
+    engineRef.current = engine;
+    runnerRef.current = runner;
 
     engine.gravity.y = 1.5;
 
     const render = Matter.Render.create({
       element: box,
-      engine: engine,
+      engine,
       options: {
         width: box.clientWidth,
         height: box.clientHeight,
@@ -40,25 +42,23 @@ export default function BallBox({ trigger, color }: Props) {
       const width = box.clientWidth;
       const height = box.clientHeight;
 
-      // clear only bodies (keep engine)
-      Matter.World.clear(world, false);
+      // Clear only bodies
+      Matter.World.clear(engine.world, false);
 
       const ground = Matter.Bodies.rectangle(width / 2, height, width, 20, {
         isStatic: true,
         render: { visible: false },
       });
-
       const leftWall = Matter.Bodies.rectangle(0, height / 2, 20, height, {
         isStatic: true,
         render: { visible: false },
       });
-
       const rightWall = Matter.Bodies.rectangle(width, height / 2, 20, height, {
         isStatic: true,
         render: { visible: false },
       });
 
-      Matter.World.add(world, [ground, leftWall, rightWall]);
+      Matter.World.add(engine.world, [ground, leftWall, rightWall]);
 
       render.canvas.width = width;
       render.canvas.height = height;
@@ -66,7 +66,6 @@ export default function BallBox({ trigger, color }: Props) {
 
     setupWorld();
 
-    // watch actual element size
     const observer = new ResizeObserver(setupWorld);
     observer.observe(box);
 
@@ -74,9 +73,11 @@ export default function BallBox({ trigger, color }: Props) {
     Matter.Render.run(render);
 
     return () => {
+      // Cleanup completely to avoid broken canvas on back navigation
       observer.disconnect();
       Matter.Render.stop(render);
-      Matter.World.clear(world, false);
+      render.canvas.remove(); // ✅ remove the canvas element
+      Matter.World.clear(engine.world, false);
       Matter.Engine.clear(engine);
     };
   }, []);
@@ -84,9 +85,8 @@ export default function BallBox({ trigger, color }: Props) {
   // Drop ball when trigger changes
   useEffect(() => {
     const engine = engineRef.current;
-
     const box = sceneRef.current;
-    if (!box) return; // fix
+    if (!engine || !box) return;
 
     const width = box.clientWidth;
 

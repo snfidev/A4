@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import "./Ampoule.css"; // make sure this is imported
 
 interface AmpouleProps {
   hour: number;
@@ -15,7 +16,7 @@ const Ampoule: React.FC<AmpouleProps> = ({ hour, unlocked, maxValue }) => {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!unlocked) return;
     const rect = containerRef.current!.getBoundingClientRect();
-    const relativeY = rect.bottom - e.clientY; // distance from bottom
+    const relativeY = rect.bottom - e.clientY;
     const newValue = Math.max(
       0,
       Math.min(maxValue, Math.round((relativeY / rect.height) * maxValue)),
@@ -27,44 +28,16 @@ const Ampoule: React.FC<AmpouleProps> = ({ hour, unlocked, maxValue }) => {
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      style={{
-        width: 60,
-        height: 200,
-        border: "2px solid gray",
-        borderRadius: 30,
-        position: "relative",
-        overflow: "hidden",
-        backgroundColor: unlocked ? "#eee" : "#ccc",
-        cursor: unlocked ? "pointer" : "not-allowed",
-        margin: 10,
-      }}
+      className={`ampoule ${unlocked ? "unlocked" : "locked"}`}
     >
       {/* Liquid fill */}
       <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          height: `${(value / maxValue) * 100}%`,
-          background: "linear-gradient(to top, #ff4b1f, #ff9068)", // lava-like
-          borderRadius: "50% 50% 0 0",
-          transition: "height 0.1s ease-out",
-        }}
+        className="liquid"
+        style={{ height: `${(value / maxValue) * 100}%` }}
       ></div>
 
       {/* Display value */}
-      <span
-        style={{
-          position: "absolute",
-          bottom: 5,
-          width: "100%",
-          textAlign: "center",
-          fontWeight: "bold",
-          color: "#fff",
-        }}
-      >
-        {value.toLocaleString()}
-      </span>
+      <span className="value">{value.toLocaleString()}</span>
     </div>
   );
 };
