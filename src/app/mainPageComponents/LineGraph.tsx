@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React from "react";
 import styles from "./LineGraph.module.css";
 
@@ -13,31 +13,31 @@ const LineGraph: React.FC<LineGraphProps> = ({ data }) => {
   return (
     <div className={styles.lineGraphContainer}>
       <div className="line-graph-container">
-  <svg className="line-graph" xmlns="http://www.w3.org/2000/svg">
-    <polyline
-      fill="none"
-      stroke="#4f46e5"
-      strokeWidth="3"
-      points={values
-        .map(
-          (value, i) =>
-            `${(i / (values.length - 1)) * 100}%,${
-              100 - (value / maxValue) * 100
-            }%`
-        )
-        .join(" ")}
-    />
-    {values.map((value, i) => (
-      <circle
-        key={i}
-        cx={`${(i / (values.length - 1)) * 100}%`}
-        cy={`${100 - (value / maxValue) * 100}%`}
-        r="4"
-        fill="#4f46e5"
-      />
-    ))}
-  </svg>
-</div>
+        <svg className="line-graph" xmlns="http://www.w3.org/2000/svg">
+          <polyline
+            fill="none"
+            stroke="#4f46e5"
+            strokeWidth="3"
+            points={values
+              .map(
+                (value, i) =>
+                  `${(i / (values.length - 1)) * 100}%,${
+                    100 - (value / maxValue) * 100
+                  }%`,
+              )
+              .join(" ")}
+          />
+          {values.map((value, i) => (
+            <circle
+              key={i}
+              cx={`${(i / (values.length - 1)) * 100}%`}
+              cy={`${100 - (value / maxValue) * 100}%`}
+              r="4"
+              fill="#4f46e5"
+            />
+          ))}
+        </svg>
+      </div>
 
       <div className={styles.hoursLabels}>
         {Array.from({ length: 8 }, (_, i) => (

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import BallBox from './mainPageComponents/BallBox';
-import LineGraph from './mainPageComponents/LineGraph';
+import React, { useState } from "react";
+import BallBox from "./mainPageComponents/BallBox";
+import LineGraph from "./mainPageComponents/LineGraph";
 
 export default function Page() {
   // Only keep page-specific state
@@ -13,21 +13,21 @@ export default function Page() {
   const [drops, setDrops] = useState(0);
 
   const addItem = () => {
-    setItems(prev => {
+    setItems((prev) => {
       const next = prev + 1;
-      if (next % 100 === 0) setDrops(d => d + 1);
+      if (next % 100 === 0) setDrops((d) => d + 1);
       return next;
     });
   };
 
   const addGood = () => {
     addItem();
-    setGoodCount(prev => prev + 1);
+    setGoodCount((prev) => prev + 1);
   };
 
   const addBad = () => {
     addItem();
-    setBadCount(prev => prev + 1);
+    setBadCount((prev) => prev + 1);
   };
 
   return (
@@ -43,7 +43,7 @@ export default function Page() {
       </div>
 
       {/* ACTION BUTTONS (optional, since sidebar had them before) */}
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         <button onClick={addGood}>+ Good</button>
         <button onClick={addBad}>+ Bad</button>
       </div>
