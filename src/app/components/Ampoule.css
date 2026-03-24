@@ -1,0 +1,56 @@
+.ampoule {
+  width: 60px;
+  height: 120px;
+  background: #f4d03f;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+
+  /* floating animation */
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* liquid inside ampoule */
+.liquid {
+  width: 100%;
+  background: #22c55e;
+  position: absolute;
+  bottom: 0;
+  transition: height 0.1s;
+}
+
+/* displayed numeric value */
+.value {
+  position: absolute;
+  top: -20px;
+  font-size: 12px;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* locked vs unlocked */
+.locked {
+  opacity: 0.4;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+.unlocked {
+  opacity: 1;
+}

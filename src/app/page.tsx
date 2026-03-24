@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 
 import React, { useState } from "react";
 import BallBox from "./mainPageComponents/BallBox";
@@ -32,7 +32,7 @@ export default function Page() {
 
   return (
     <>
-      {/* TOP SECTION */}
+      
       <div className="top">
         <div className="box">
           <BallBox trigger={goodCount} color="green" />
@@ -42,18 +42,30 @@ export default function Page() {
         </div>
       </div>
 
-      {/* ACTION BUTTONS (optional, since sidebar had them before) */}
+      
       <div style={{ display: "flex", gap: "10px" }}>
         <button onClick={addGood}>+ Good</button>
         <button onClick={addBad}>+ Bad</button>
       </div>
 
-      {/* BOTTOM GRAPH */}
+      
       <div className="bottom">
         <div className="linegraph-wrapper">
           <LineGraph />
         </div>
       </div>
     </>
+  );
+} */
+
+"use client";
+
+import LevelMap from "./components/LevelMap";
+
+export default function HomePage() {
+  return (
+    <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
+      <LevelMap />
+    </div>
   );
 }

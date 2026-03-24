@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import AppShell from "./AppShell";
 
 export const metadata: Metadata = {
   title: "A4",
@@ -14,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <AppShell>{children}</AppShell>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
