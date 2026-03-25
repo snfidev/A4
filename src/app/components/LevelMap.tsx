@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import styles from "./LevelMap.module.css";
+import Ampoule from "./Ampoule";
 
 export default function LevelMap() {
   const totalLevels = 8;
@@ -16,10 +17,14 @@ export default function LevelMap() {
   const dragStart = useRef(0);
   const mapStart = useRef(0);
 
+  const [selectedIsland, setSelectedIsland] = useState<number | null>(null);
+  const [dropping, setDropping] = useState(false);
+  const [visible, setVisible] = useState(false); // controls table in DOM
+
   // --- Time-based unlocking ---
   const getUnlockedLevels = () => {
     const now = new Date();
-    const startHour = 6;
+    const startHour = 7;
     const unlocked = now.getHours() - startHour + 1;
     return Math.max(0, Math.min(totalLevels, unlocked));
   };
@@ -33,18 +38,15 @@ export default function LevelMap() {
     return () => clearInterval(interval);
   }, []);
 
-  // --- Start at top ---
   useEffect(() => {
     setOffsetY(0);
     offsetRef.current = 0;
   }, []);
 
-  // --- Sync ref ---
   useEffect(() => {
     offsetRef.current = offsetY;
   }, [offsetY]);
 
-  // --- Dark mode ---
   useEffect(() => {
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) setDarkMode(saved === "true");
@@ -72,21 +74,26 @@ export default function LevelMap() {
     return `/islands/${theme}/island${index + 1}.png`;
   };
 
+  // --- Island click ---
   const handleClick = (index: number, unlocked: boolean) => {
     if (!unlocked) return;
-    console.log("Clicked island:", index + 1);
+    setSelectedIsland(index);
+    setVisible(true); // keep table in DOM
+    requestAnimationFrame(() => setDropping(true)); // trigger drop-in animation
   };
 
-  // FIXED clamp
+  const handleClose = () => {
+    setDropping(false); // triggers pull-up animation
+    setTimeout(() => setVisible(false), 500); // remove table after animation
+    setTimeout(() => setSelectedIsland(null), 500); // clean up island selection
+  };
+
   const clamp = (value: number) => {
     if (!mapRef.current) return 0;
-
     const elHeight = mapRef.current.scrollHeight;
     const viewport = window.innerHeight;
-
     const min = Math.min(0, viewport - elHeight);
     const max = 0;
-
     return Math.min(max, Math.max(min, value));
   };
 
@@ -94,7 +101,6 @@ export default function LevelMap() {
   useEffect(() => {
     const el = mapRef.current;
     if (!el) return;
-
     let dragging = false;
 
     const onMouseDown = (e: MouseEvent) => {
@@ -103,7 +109,6 @@ export default function LevelMap() {
       mapStart.current = offsetRef.current;
       el.classList.add(styles.dragging);
     };
-
     const onMouseMove = (e: MouseEvent) => {
       if (!dragging) return;
       const dy = e.clientY - dragStart.current;
@@ -111,7 +116,6 @@ export default function LevelMap() {
       offsetRef.current = next;
       setOffsetY(next);
     };
-
     const onMouseUp = () => {
       dragging = false;
       el.classList.remove(styles.dragging);
@@ -123,7 +127,6 @@ export default function LevelMap() {
       mapStart.current = offsetRef.current;
       el.classList.add(styles.dragging);
     };
-
     const onTouchMove = (e: TouchEvent) => {
       if (!dragging) return;
       e.preventDefault();
@@ -132,7 +135,6 @@ export default function LevelMap() {
       offsetRef.current = next;
       setOffsetY(next);
     };
-
     const onTouchEnd = () => {
       dragging = false;
       el.classList.remove(styles.dragging);
@@ -157,10 +159,9 @@ export default function LevelMap() {
     };
   }, []);
 
-  // ✅ Curved dotted path (SSR safe)
   const generatePath = () => {
-    const width = 1000; // virtual SVG width
-    const height = 1600; // must match map height
+    const width = 1000;
+    const height = 1600;
 
     const points = positions.map((p) => ({
       x: (p.x / 100) * width,
@@ -168,17 +169,13 @@ export default function LevelMap() {
     }));
 
     let d = `M ${points[0].x} ${points[0].y}`;
-
     for (let i = 1; i < points.length; i++) {
       const prev = points[i - 1];
       const curr = points[i];
-
       const midX = (prev.x + curr.x) / 2;
       const midY = (prev.y + curr.y) / 2;
-
       d += ` Q ${prev.x} ${prev.y}, ${midX} ${midY}`;
     }
-
     return d;
   };
 
@@ -186,6 +183,10 @@ export default function LevelMap() {
     <div
       className={`${styles.mapWrapper} ${darkMode ? styles.dark : styles.light}`}
     >
+      <div
+        className={`${styles.blurOverlay} ${visible ? styles.activeBlur : ""}`}
+      />
+
       <button className={styles.toggle} onClick={toggleDarkMode}>
         {darkMode ? "Lava Mode" : "Tropical Mode"}
       </button>
@@ -197,7 +198,6 @@ export default function LevelMap() {
         className={styles.mapInner}
         style={{ transform: `translateY(${offsetY}px)` }}
       >
-        {/* ✅ PATH behind islands */}
         <svg
           className={styles.pathSvg}
           viewBox="0 0 1000 1600"
@@ -229,6 +229,57 @@ export default function LevelMap() {
           );
         })}
       </div>
+
+      {/* Drop-in table overlay */}
+      {visible && selectedIsland !== null && (
+        <>
+          {/* Blur overlay */}
+          <div
+            className={`${styles.blurOverlay} ${visible ? styles.activeBlur : ""}`}
+          />
+
+          {/* Table container: sprite + content */}
+          <div
+            className={`${styles.tableContainer} ${dropping ? styles.dropIn : styles.pullUp}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={`${styles.tableSprite} ${
+                darkMode ? styles.lavaTable : styles.tropicalTable
+              }`}
+            />
+
+            <div className={styles.tableContent}>
+              <div className={styles.part1}>
+                <button className={styles.closeBtn} onClick={handleClose}>
+                  ✕
+                </button>
+                <h2>Island {selectedIsland + 1}</h2>
+                <p>Log your progress for this hour.</p>
+              </div>
+              <div className={styles.part2}>
+                <div className={styles.singleAmpoule}>
+                  <Ampoule
+                    hour={selectedIsland}
+                    unlocked={true}
+                    maxValue={100}
+                    islandId={selectedIsland}
+                  />
+                </div>
+              </div>
+              <div className={styles.part3}>
+                <p>
+                  Track consistently to unlock more islands.
+                  <span className={styles.pageNumber}>
+                    {selectedIsland + 1}
+                  </span>
+                </p>
+                <button className={styles.saveBtn}>Save</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

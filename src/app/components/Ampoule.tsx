@@ -7,6 +7,7 @@ interface AmpouleProps {
   hour: number;
   unlocked: boolean;
   maxValue: number;
+  islandId?: number;
 }
 
 const Ampoule: React.FC<AmpouleProps> = ({ hour, unlocked, maxValue }) => {

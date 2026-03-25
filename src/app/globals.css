@@ -1,3 +1,25 @@
+@font-face {
+  font-family: "TropicalFont";
+  src: url("/fonts/PinappleDemo-3oGz.ttf") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "LavaFont";
+  src: url("/fonts/ZaiLava-axYeo.ttf") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.light {
+  --app-font: "TropicalFont", sans-serif;
+}
+
+.dark {
+  --app-font: "LavaFont", sans-serif;
+}
+
 @import "tailwindcss";
 
 :root {
@@ -22,15 +44,15 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
   width: 100%;
+  font-family: var(--app-font);
+  transition: font-family 0.2s ease;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
   max-width: 100%; /* !!!!!!!!!!!!!!!! */
 }
 
@@ -40,208 +62,4 @@ body,
   height: 100%;
   width: 100%;
   overflow-x: hidden;
-}
-
-.container {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  transition:
-    background 0.3s,
-    color 0.3s;
-  overflow-x: hidden;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.sidebar {
-  width: 15%;
-  min-width: 150px;
-  max-width: 250px;
-  background: #2c3e50;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 12px;
-  gap: 1%;
-  position: relative;
-}
-
-.logo {
-  width: 80%;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.logo-wrapper {
-  position: relative;
-  width: 80%; /* dynamic width relative to sidebar */
-  aspect-ratio: 1 / 1; /* keeps square height automatically */
-  margin-bottom: 10px;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.menu-items {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 10px;
-}
-
-.menu-items button {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: #34495e;
-  color: white;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.menu-items button span {
-  position: relative;
-  z-index: 2;
-}
-
-.menu-items button.active {
-  background: #1abc9c;
-}
-
-/* the filling layer */
-.menu-items button::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-
-  background: #1abc9c;
-  border-radius: 50%; /* circle at start, pill when expanded */
-  transform: translate(-50%, -50%) scale(0); /* start tiny */
-  transform-origin: center;
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
-}
-
-/* on hover, expand */
-.menu-items button:hover::before {
-  transform: translate(-50%, -50%) scale(2); /* full size */
-}
-
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 20px;
-  min-width: 0;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1%;
-  background: #bdc3c7;
-  border-radius: 10px;
-  width: 100%;
-}
-
-.dark .navbar {
-  background: #34495e;
-}
-
-.dark-mode-toggle {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background: #22303e;
-  color: white;
-}
-
-.app-shell {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* Background layer */
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-
-  background-repeat: repeat; /* repeat horizontally and vertically */
-  background-size: 250px 250px; /* tile size */
-  animation: flow 30s linear infinite; /* adjust duration to slow down */
-}
-
-/* Water / Lava variants */
-.background.water {
-  background-image: url("/Sea.png");
-}
-
-.background.lava {
-  background-image: url("/Lava.png");
-}
-
-/* Animation */
-@keyframes flow {
-  from {
-    background-position: 0 0;
-  } /* start at top */
-  to {
-    background-position: 0 200px;
-  } /* move downward by 200px */
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1%;
-  }
-  .menu-toggle {
-    display: block;
-  }
-  .menu-items {
-    display: none;
-    flex-direction: column;
-    width: 100vw;
-    background: #2c3e50;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    padding: 10px 0;
-  }
-  .menu-items.open {
-    display: flex;
-    width: 100%;
-  }
 }
