@@ -1,0 +1,37 @@
+.ship {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+
+  transition:
+    left 1s linear,
+    top 1s linear;
+
+  animation: floatShip 3s ease-in-out infinite;
+}
+
+/* This handles rotation */
+.shipInner {
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Sprite image */
+.shipInner img {
+  width: 60px; /* 🔥 adjust this */
+  height: auto;
+  image-rendering: auto; /* or 'pixelated' if pixel art */
+}
+
+/* Floating animation */
+@keyframes floatShip {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}

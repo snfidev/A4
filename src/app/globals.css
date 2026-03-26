@@ -1,15 +1,20 @@
 @font-face {
   font-family: "TropicalFont";
-  src: url("/fonts/PinappleDemo-3oGz.ttf") format("woff2");
+  src: url("/fonts/PineappleDemo-3oGz.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "LavaFont";
-  src: url("/fonts/ZaiLava-axYeo.ttf") format("woff2");
+  src: url("/fonts/ZaiLava-axYeo.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@keyframes floatShip {
+  0%, 100% { transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0); }
+  50% { transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-4px); }
 }
 
 .light {

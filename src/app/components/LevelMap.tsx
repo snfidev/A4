@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import styles from "./LevelMap.module.css";
 import Ampoule from "./Ampoule";
+import ShipMovement from "./ShipMovement";
 
 export default function LevelMap() {
   const totalLevels = 8;
@@ -159,29 +160,41 @@ export default function LevelMap() {
     };
   }, []);
 
-  const generatePath = () => {
-    const width = 1000;
-    const height = 1600;
+const generatePath = () => {
+  const width = 1000;
+  const height = 1600;
 
-    const points = positions.map((p) => ({
-      x: (p.x / 100) * width,
-      y: (p.y / 100) * height,
-    }));
+  const points = positions.map((p) => ({
+    x: (p.x / 100) * width,
+    y: (p.y / 100) * height,
+  }));
 
-    let d = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) {
-      const prev = points[i - 1];
-      const curr = points[i];
-      const midX = (prev.x + curr.x) / 2;
-      const midY = (prev.y + curr.y) / 2;
-      d += ` Q ${prev.x} ${prev.y}, ${midX} ${midY}`;
-    }
-    return d;
-  };
+  let d = `M ${points[0].x} ${points[0].y}`;
+
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+
+    const midX = (prev.x + curr.x) / 2;
+    const midY = (prev.y + curr.y) / 2;
+
+    // curve TO midpoint
+    d += ` Q ${prev.x} ${prev.y}, ${midX} ${midY}`;
+  }
+
+  const last = points[points.length - 1];
+  d += ` T ${last.x} ${last.y}`;
+
+  return d;
+};
 
   return (
     <div
-      className={`${styles.mapWrapper} ${darkMode ? styles.dark : styles.light}`}
+      className={`
+    ${styles.mapWrapper}
+    ${darkMode ? styles.dark : styles.light}   // background (module)
+    ${darkMode ? "dark" : "light"}             // font (global)
+  `}
     >
       <div
         className={`${styles.blurOverlay} ${visible ? styles.activeBlur : ""}`}
@@ -205,6 +218,8 @@ export default function LevelMap() {
         >
           <path d={generatePath()} className={styles.pathLine} />
         </svg>
+
+        <ShipMovement pathD={generatePath()} totalLevels={totalLevels} />
 
         {positions.map((pos, index) => {
           const unlocked = index + 1 <= unlockedCount;
@@ -262,7 +277,7 @@ export default function LevelMap() {
                   <Ampoule
                     hour={selectedIsland}
                     unlocked={true}
-                    maxValue={100}
+                    maxValue={15}
                     islandId={selectedIsland}
                   />
                 </div>
