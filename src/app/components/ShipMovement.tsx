@@ -14,7 +14,7 @@ export default function ShipMovement({ pathD, totalLevels }: Props) {
   const [ship, setShip] = useState({
     x: 0,
     y: 0,
-    angle: 0,
+    direction: 1, // 1 = right, -1 = left
   });
 
   // --- Time → progress (7 AM start) ---
@@ -46,23 +46,26 @@ export default function ShipMovement({ pathD, totalLevels }: Props) {
         Math.min(progress * length + 2, length),
       );
 
-      const angle =
-        (Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180) /
-        Math.PI;
+      const dx = nextPoint.x - point.x;
+
+      // determine direction
+      const direction = Math.abs(dx) < 0.1 ? ship.direction : dx >= 0 ? 1 : -1;
 
       setShip({
         x: point.x,
         y: point.y,
-        angle,
+        direction,
       });
     };
 
+    // run once immediately
     updateShip();
-    const interval = setInterval(updateShip, 30000); // smoother updates
+
+    // then update over time
+    const interval = setInterval(updateShip, 30000);
 
     return () => clearInterval(interval);
   }, []);
-
   return (
     <>
       {/* Invisible path (used for calculations) */}
@@ -81,7 +84,7 @@ export default function ShipMovement({ pathD, totalLevels }: Props) {
         <div
           className={styles.shipInner}
           style={{
-            transform: `translate(-50%, -50%) rotate(${ship.angle}deg)`,
+            transform: `translate(-50%, -50%) scaleX(${ship.direction})`,
           }}
         >
           <img src="/sprites/ship.png" alt="ship" />

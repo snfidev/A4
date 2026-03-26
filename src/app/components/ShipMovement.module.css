@@ -16,11 +16,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  animation: rockShip 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+  transition: transform 0.3s ease;
 }
 
 /* Sprite image */
 .shipInner img {
-  width: 60px; /* 🔥 adjust this */
+  width: 100px; /* adjust this */
   height: auto;
   image-rendering: auto; /* or 'pixelated' if pixel art */
 }
@@ -33,5 +37,17 @@
   }
   50% {
     transform: translateY(-4px);
+  }
+}
+
+@keyframes rockShip {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
   }
 }
