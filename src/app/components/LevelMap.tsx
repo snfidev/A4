@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./LevelMap.module.css";
 import Ampoule from "./Ampoule";
 import ShipMovement from "./ShipMovement";
+import LiquidLevel from "./LiquidLevel";
 
 export default function LevelMap() {
   const totalLevels = 8;
@@ -160,33 +161,33 @@ export default function LevelMap() {
     };
   }, []);
 
-const generatePath = () => {
-  const width = 1000;
-  const height = 1600;
+  const generatePath = () => {
+    const width = 1000;
+    const height = 1600;
 
-  const points = positions.map((p) => ({
-    x: (p.x / 100) * width,
-    y: (p.y / 100) * height,
-  }));
+    const points = positions.map((p) => ({
+      x: (p.x / 100) * width,
+      y: (p.y / 100) * height,
+    }));
 
-  let d = `M ${points[0].x} ${points[0].y}`;
+    let d = `M ${points[0].x} ${points[0].y}`;
 
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
 
-    const midX = (prev.x + curr.x) / 2;
-    const midY = (prev.y + curr.y) / 2;
+      const midX = (prev.x + curr.x) / 2;
+      const midY = (prev.y + curr.y) / 2;
 
-    // curve TO midpoint
-    d += ` Q ${prev.x} ${prev.y}, ${midX} ${midY}`;
-  }
+      // curve TO midpoint
+      d += ` Q ${prev.x} ${prev.y}, ${midX} ${midY}`;
+    }
 
-  const last = points[points.length - 1];
-  d += ` T ${last.x} ${last.y}`;
+    const last = points[points.length - 1];
+    d += ` T ${last.x} ${last.y}`;
 
-  return d;
-};
+    return d;
+  };
 
   return (
     <div
@@ -243,6 +244,10 @@ const generatePath = () => {
             </div>
           );
         })}
+      </div>
+
+      <div style={{ position: "absolute", right: 20, top: 100 }}>
+        <LiquidLevel value={0.7} height={300} />
       </div>
 
       {/* Drop-in table overlay */}
