@@ -3,6 +3,9 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+
+  height: 80vh;
+  width: 60px; /* or keep dynamic via inline style */
 }
 
 /* glass tube */
@@ -27,59 +30,9 @@
   background: linear-gradient(180deg, #6ec6ff, #3fa9f5);
   transition: transform 0.8s ease;
   overflow: hidden;
-}
-
-/* infinite wave */
-.wave {
-  position: absolute;
-  top: -10px; /* slightly above to give room for motion */
-  left: 0;
-  width: 200%;
-  height: 60px; /* bigger = stronger wave */
-
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'><path d='M0 25 Q30 5 60 25 T120 25 V40 H0 Z' fill='%233fa9f5'/></svg>")
-    repeat-x;
-
-  animation:
-    waveMove 3s linear infinite,
-    waveBob 2s ease-in-out infinite;
-}
-
-@keyframes waveMove {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes waveBob {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(6px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.waveBack {
-  position: absolute;
-  top: -5px;
-  left: 0;
-  width: 200%;
-  height: 60px;
-  opacity: 0.5;
-
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'><path d='M0 28 Q30 10 60 28 T120 28 V40 H0 Z' fill='%236ec6ff'/></svg>")
-    repeat-x;
-
-  animation:
-    waveMove 5s linear infinite reverse,
-    waveBob 3s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* bubbles */

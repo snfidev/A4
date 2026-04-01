@@ -247,7 +247,7 @@ export default function LevelMap() {
       </div>
 
       <div style={{ position: "absolute", right: 20, top: 100 }}>
-        <LiquidLevel value={0.7} height={300} />
+        <LiquidLevel value={0.7} darkMode={darkMode} />
       </div>
 
       {/* Drop-in table overlay */}

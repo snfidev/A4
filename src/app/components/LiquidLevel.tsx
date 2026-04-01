@@ -6,7 +6,7 @@ import styles from "./LiquidLevel.module.css";
 interface Bubble {
   id: number;
   left: number;
-  top: number; // ADD THIS
+  top: number;
   size: number;
   duration: number;
   delay: number;
@@ -15,15 +15,15 @@ interface Bubble {
 export default function LiquidLevel({
   value = 0.6,
   width = 60,
-  height = 600,
+  darkMode = false,
 }: {
   value?: number;
   width?: number;
-  height?: number;
+  darkMode?: boolean;
 }) {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
 
-  // continuously regenerate bubbles (so they feel random, not static)
+  // continuously generate bubbles
   useEffect(() => {
     const generate = () => {
       return Array.from({ length: 14 }, (_, i) => ({
@@ -40,14 +40,18 @@ export default function LiquidLevel({
   }, []);
 
   return (
-    <div className={styles.wrapper} style={{ width, height }}>
+    <div className={styles.wrapper} style={{ width }}>
       <div className={styles.glass}>
         {/* LIQUID */}
-        <div className={styles.liquid} style={{ height: `${value * 100}%` }}>
-          {/* WAVES */}
-          <div className={styles.waveBack} />
-          <div className={styles.wave} />
-
+        <div
+          className={styles.liquid}
+          style={{
+            height: `${value * 100}%`,
+            background: darkMode
+              ? "linear-gradient(180deg, #7f1d1d, #3b0a0a)" // deep lava red
+              : "linear-gradient(180deg, #6ec6ff, #3fa9f5)", // water
+          }}
+        >
           {/* BUBBLES */}
           {bubbles.map((b) => (
             <span
@@ -60,6 +64,9 @@ export default function LiquidLevel({
                 height: b.size,
                 animationDuration: `${b.duration}s`,
                 animationDelay: `${b.delay}s`,
+                background: darkMode
+                  ? "rgba(255, 100, 100, 0.8)" // light red bubbles for lava
+                  : "rgba(255, 255, 255, 0.7)", // normal water bubbles
               }}
             />
           ))}
