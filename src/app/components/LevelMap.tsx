@@ -220,7 +220,11 @@ export default function LevelMap() {
           <path d={generatePath()} className={styles.pathLine} />
         </svg>
 
-        <ShipMovement pathD={generatePath()} totalLevels={totalLevels} />
+        <ShipMovement
+          pathD={generatePath()}
+          totalLevels={totalLevels}
+          darkMode={darkMode}
+        />
 
         {positions.map((pos, index) => {
           const unlocked = index + 1 <= unlockedCount;
