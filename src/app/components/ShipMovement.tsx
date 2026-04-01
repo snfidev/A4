@@ -65,11 +65,6 @@ export default function ShipMovement({ pathD, totalLevels, darkMode }: Props) {
     ? "../sprites/lava-ship.png"
     : "../sprites/tropical-ship.png";
 
-  // optional glow for lava
-  const glowStyle = darkMode
-    ? "drop-shadow(0 0 15px #ff6b6b) drop-shadow(0 0 25px #ff3b3b)"
-    : "drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px #ffe600)";
-
   return (
     <>
       {/* Invisible path */}
@@ -89,7 +84,6 @@ export default function ShipMovement({ pathD, totalLevels, darkMode }: Props) {
           className={styles.shipInner}
           style={{
             transform: `translate(-50%, -50%) scaleX(${ship.direction})`,
-            filter: glowStyle, // add glow
           }}
         >
           <img src={shipSrc} alt="ship" />

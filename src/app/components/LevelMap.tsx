@@ -6,6 +6,7 @@ import styles from "./LevelMap.module.css";
 import Ampoule from "./Ampoule";
 import ShipMovement from "./ShipMovement";
 import LiquidLevel from "./LiquidLevel";
+import Stars from "./Stars";
 
 export default function LevelMap() {
   const totalLevels = 8;
@@ -30,6 +31,8 @@ export default function LevelMap() {
     const unlocked = now.getHours() - startHour + 1;
     return Math.max(0, Math.min(totalLevels, unlocked));
   };
+
+  const [stars, setStars] = useState<number[]>(Array(totalLevels).fill(0));
 
   useEffect(() => {
     setUnlockedCount(getUnlockedLevels());
@@ -245,6 +248,8 @@ export default function LevelMap() {
                 width={350}
                 height={350}
               />
+
+              {unlocked && <Stars value={stars[index]} />}
             </div>
           );
         })}
