@@ -7,6 +7,7 @@ import Ampoule from "./Ampoule";
 import ShipMovement from "./ShipMovement";
 import LiquidLevel from "./LiquidLevel";
 import Stars from "./Stars";
+import NotesWidget from "./Notes";
 
 export default function LevelMap() {
   const totalLevels = 8;
@@ -209,6 +210,8 @@ export default function LevelMap() {
       </button>
 
       <div className={styles.waterLayer}></div>
+
+      <NotesWidget />
 
       <div
         ref={mapRef}
