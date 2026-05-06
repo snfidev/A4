@@ -1,0 +1,19 @@
+.stars {
+  position: absolute;
+  bottom: -22px; /* sits under island */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+
+  pointer-events: none; /* prevents click interference */
+  z-index: 2;
+}
+
+.filled {
+  opacity: 1;
+}
+
+.empty {
+  opacity: 0.3;
+}

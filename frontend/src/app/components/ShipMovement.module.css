@@ -1,0 +1,53 @@
+.ship {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+
+  transition:
+    left 1s linear,
+    top 1s linear;
+
+  animation: floatShip 3s ease-in-out infinite;
+}
+
+/* This handles rotation */
+.shipInner {
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: rockShip 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+  transition: transform 0.3s ease;
+}
+
+/* Sprite image */
+.shipInner img {
+  width: 150px; /* adjust this */
+  height: auto;
+  image-rendering: auto; /* or 'pixelated'*/
+}
+
+/* Floating animation */
+@keyframes floatShip {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes rockShip {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}

@@ -1,0 +1,298 @@
+.mapWrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  cursor: grab;
+  font-family: var(--app-font);
+}
+.mapWrapper:active {
+  cursor: grabbing;
+}
+
+/* Scrollable inner map */
+.mapInner {
+  position: absolute;
+  width: 100%;
+  height: 1600px; /* fixed height instead of vh */
+  top: 0;
+  left: 0;
+  transform: translateY(0);
+  transition: transform 0.2s ease-out;
+  padding: 150px 0; /* spacing so islands aren't cut */
+}
+
+/* Islands */
+.island {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  animation: float 3s ease-in-out infinite;
+  z-index: 3;
+}
+
+.locked {
+  filter: grayscale(1) brightness(0.6);
+  cursor: not-allowed;
+}
+
+.unlocked {
+  filter: none;
+}
+
+.unlocked:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.unlocked img {
+  animation: glowPulse 2s infinite ease-in-out;
+  filter: drop-shadow(0 0 10px var(--glow-color))
+    drop-shadow(0 0 20px var(--glow-color));
+}
+
+.unlocked:hover img {
+  filter: drop-shadow(0 0 15px var(--glow-color))
+    drop-shadow(0 0 30px var(--glow-color));
+}
+
+/* Theme variables */
+.light {
+  --glow-color: yellow;
+}
+.dark {
+  --glow-color: orange;
+}
+
+/* Toggle button */
+.toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.toggle:hover {
+  transform: scale(1.05);
+}
+
+/* Water/lava streaks */
+.waterLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(120deg, transparent 95%, rgba(255, 255, 255, 0.5) 100%),
+    linear-gradient(60deg, transparent 96%, rgba(255, 255, 255, 0.4) 100%),
+    linear-gradient(200deg, transparent 94%, rgba(255, 255, 255, 0.3) 100%);
+  background-size:
+    120px 120px,
+    180px 180px,
+    150px 150px;
+  animation: foamMove 6s linear infinite;
+  opacity: 0.25;
+}
+
+.dragging {
+  transition: none !important;
+}
+
+/* Keyframes */
+@keyframes foamMove {
+  0% {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      120px 60px,
+      -180px 90px,
+      150px -80px;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-5px);
+  }
+}
+
+.light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, #0ea5e9, #22d3ee, #0284c7, #38bdf8);
+  background-size: 300% 300%;
+  animation: waterFlow 10s ease-in-out infinite;
+}
+
+.dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, #3b0a0a, #7f1d1d, #1f0000);
+  background-size: 200% 200%;
+  animation: lavaMove 5s linear infinite;
+}
+
+.pathSvg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pathLine {
+  fill: none;
+  stroke: white;
+  stroke-width: 4;
+  stroke-dasharray: 12 12;
+  opacity: 0.7;
+}
+
+/* Blur overlay */
+.blurOverlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(0px);
+  transition: backdrop-filter 0.3s ease;
+  pointer-events: none;
+  z-index: 9; /* behind table but above map */
+}
+
+.activeBlur {
+  backdrop-filter: blur(6px);
+  pointer-events: all; /* block background clicks */
+}
+
+/* Table container (sprite + content) */
+.tableContainer {
+  position: fixed;
+  top: -800px; /* start offscreen */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1400px;
+  height: 1000px;
+  z-index: 11;
+}
+
+/* Drop-in animation with subtle bounce */
+.tableContainer.dropIn {
+  top: -20px;
+  transition: top 0.8s cubic-bezier(0.25, 0.7, 0.25, 1.1);
+}
+
+/* Pull-up animation */
+.tableContainer.pullUp {
+  top: -800px;
+  transition: top 0.5s ease-in;
+}
+
+/* Table sprite */
+/* Base table sprite (no background here anymore) */
+.tableSprite {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Tropical version */
+.tropicalTable {
+  background-image: url("/sprites/tropical-table.png");
+}
+
+/* Lava version */
+.lavaTable {
+  background-image: url("/sprites/lava-table.png");
+}
+
+/* Content directly on the table */
+.tableContent {
+  position: absolute;
+  top: 325px; /* lowered so content aligns with rope */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: all; /* allow clicks */
+  color: whitesmoke;
+}
+/* Parts styling */
+.part1,
+.part2,
+.part3 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Save button */
+.saveBtn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: #ffcc00;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.saveBtn:hover {
+  transform: scale(1.05);
+}
+
+@keyframes waterFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes lavaMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px var(--glow-color));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px var(--glow-color));
+  }
+}
