@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import "./Ampoule.module.css";
+import styles from "./Ampoule.module.css";
 
 interface AmpouleProps {
   hour: number;
@@ -72,16 +72,16 @@ const Ampoule: React.FC<AmpouleProps> = ({
       onMouseUp={stopDrag}
       onMouseLeave={stopDrag}
       onMouseMove={handleMouseMove}
-      className={`ampoule ${unlocked ? "unlocked" : "locked"}`}
+      className={`${styles.ampoule} ${unlocked ? styles.unlocked : styles.locked}`}
     >
       {/* Liquid fill */}
       <div
-        className="liquid"
+        className={styles.liquid}
         style={{ height: `${(value / maxValue) * 100}%` }}
       />
 
       {/* Value display */}
-      <span className="value">{value}</span>
+      <span className={styles.value}>{value}</span>
     </div>
   );
 };
